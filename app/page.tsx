@@ -143,21 +143,19 @@ export default function PortfolioPage() {
               </div>
             </motion.div>
           </div>
-          <div className="lg:col-span-5">
+          <div className="hidden lg:block lg:col-span-5">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.2 }}
-              className="relative aspect-[4/5] bg-gray-100 overflow-hidden group cursor-crosshair"
+              className="relative aspect-[4/5]  overflow-hidden group cursor-crosshair"
             >
               <Image
                 src="/dayu-hero.png"
                 alt="Dayu Dayusman"
                 fill
-                priority
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="object-cover transition-all duration-700 ease-in-out  [filter:grayscale(1)] group-hover:[filter:grayscale(0)] "
-
+                sizes="(min-width: 576px) 40vw, 100vw"
+                className="object-none transition-all duration-700 ease-in-out [filter:grayscale(1)] group-hover:[filter:grayscale(0)] "
               />
             </motion.div>
           </div>
