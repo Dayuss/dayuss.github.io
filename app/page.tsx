@@ -122,14 +122,22 @@ export default function PortfolioPage() {
               </p>
               <div className="flex flex-wrap gap-6 items-center">
                 <a 
-                  href="mailto:ddtardian@gmail.com"
+                  href="#contact"
                   className="bg-black text-white px-10 py-5 text-sm font-medium hover:bg-gray-900 transition-all hover:px-12"
                 >
                   Work with me
                 </a>
+                <a
+                  href="https://drive.google.com/drive/folders/1jSYre7nR0OWpGdFqZ7BLPvU8cW_Z1PBI?usp=drive_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white text-black px-10 py-5 text-sm font-medium hover:bg-gray-200 transition-all hover:px-12"
+                >
+                  See my resume <ArrowUpRight size={16} className="inline-block ml-2" />
+                </a>
                 <div className="flex gap-8 text-gray-400">
-                  <a href="https://github.com" aria-label="GitHub" title="GitHub" className="hover:text-black transition-colors"><Github size={22} /></a>
-                  <a href="https://linkedin.com" aria-label="LinkedIn" title="LinkedIn" className="hover:text-black transition-colors"><Linkedin size={22} /></a>
+                  <a href="https://github.com/dayuss"   target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub" className="hover:text-black transition-colors"><Github size={22} /></a>
+                  <a href="https://www.linkedin.com/in/dayu-dayusman-tardian-1858b9118" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn" className="hover:text-black transition-colors"><Linkedin size={22} /></a>
                 </div>
               </div>
             </motion.div>
@@ -147,11 +155,9 @@ export default function PortfolioPage() {
                 fill
                 priority
                 sizes="(min-width: 1024px) 40vw, 100vw"
-                // className="object-cover transition-all duration-700 ease-in-out [filter:grayscale(1)] group-hover:[filter:grayscale(0)] group-hover:scale-105"
                 className="object-cover transition-all duration-700 ease-in-out  [filter:grayscale(1)] group-hover:[filter:grayscale(0)] "
 
               />
-              {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div> */}
             </motion.div>
           </div>
         </div>
@@ -294,7 +300,7 @@ export default function PortfolioPage() {
             </a>
 
             <a 
-              href="https://linkedin.com" 
+              href="https://www.linkedin.com/in/dayu-dayusman-tardian-1858b9118" 
               target="_blank"
               rel="noopener noreferrer"
               className="group p-8 border border-black/5 hover:border-black/20 transition-all duration-300 flex flex-col items-center text-center"
@@ -303,11 +309,11 @@ export default function PortfolioPage() {
                 <Linkedin size={20} />
               </div>
               <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-gray-400 mb-2">LinkedIn</span>
-              <span className="text-sm font-light">Dayu Dayusman</span>
+              <span className="text-sm font-light">Dayu Dayusman Tardian</span>
             </a>
 
             <a 
-              href="https://github.com" 
+              href="https://github.com/dayuss" 
               target="_blank"
               rel="noopener noreferrer"
               className="group p-8 border border-black/5 hover:border-black/20 transition-all duration-300 flex flex-col items-center text-center"
@@ -316,7 +322,7 @@ export default function PortfolioPage() {
                 <Github size={20} />
               </div>
               <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-gray-400 mb-2">GitHub</span>
-              <span className="text-sm font-light">dayudayusman</span>
+              <span className="text-sm font-light">dayuss</span>
             </a>
           </div>
         </div>
@@ -325,7 +331,7 @@ export default function PortfolioPage() {
       {/* Footer */}
       <footer className="py-12 border-t border-black/5">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-medium uppercase tracking-[0.2em] text-gray-400">
-          <div>© 2026 Dayu Dayusman Tardian</div>
+          <div>© {new Date().getFullYear()} Dayu Dayusman Tardian</div>
           <div className="flex gap-8">
             <a href="#" className="hover:text-black transition-colors">Privacy</a>
             <a href="#" className="hover:text-black transition-colors">Terms</a>
