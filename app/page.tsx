@@ -90,13 +90,14 @@ export default function PortfolioPage() {
       <nav className="sticky top-0 bg-white/80 backdrop-blur-md z-50 border-b border-black/5">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="font-display font-medium text-lg tracking-tighter">
-            DAYUS-<span className="bg-yellow-500 px-2 py-1 border border-black inline-block rotate-[-6deg]">MAN</span>
+            DAYUS<span className="bg-yellow-500 mx-1 px-2 py-1 border border-black inline-block rotate-[-6deg]">MAN</span>
           </div>
           <div className="hidden md:flex gap-10 font-sans text-xs font-medium uppercase tracking-widest text-gray-500">
             <a href="#about" className="hover:text-black transition-colors">About</a>
             <a href="#work" className="hover:text-black transition-colors">Work</a>
             <a href="#skills" className="hover:text-black transition-colors">Skills</a>
             <a href="#contact" className="hover:text-black transition-colors text-black border-b border-black pb-1">Contact</a>
+            {/* <a href="/github-repos" className="hover:text-black transition-colors">GitHub Repos</a> */}
           </div>
         </div>
       </nav>
