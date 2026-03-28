@@ -25,7 +25,13 @@ function getFirebaseConfig() {
   return config;
 }
 
-const app = !getApps().length ? initializeApp(getFirebaseConfig()) : getApp();
+function getFirebaseApp() {
+  if (typeof window === 'undefined') {
+    throw new Error('Firebase can only be initialized in the browser.');
+  }
+
+  return !getApps().length ? initializeApp(getFirebaseConfig()) : getApp();
+}
 
 export async function initializeFirebase() {
   if (typeof window === 'undefined') {
@@ -33,9 +39,10 @@ export async function initializeFirebase() {
   }
 
   try {
+    const firebaseApp = getFirebaseApp();
     const { getAnalytics, isSupported } = await import('firebase/analytics');
     if (await isSupported()) {
-      return getAnalytics(app);
+      return getAnalytics(firebaseApp);
     }
   } catch (error) {
     console.warn('Firebase initialization failed:', error);
