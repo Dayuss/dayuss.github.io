@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
+import { initializeFirebase } from '../lib/firebase';
 import { 
   Github, 
   Linkedin, 
@@ -84,6 +85,10 @@ const EXPERIENCE = [
 ];
 
 export default function PortfolioPage() {
+  useEffect(() => {
+    initializeFirebase();
+  }, []);
+
   return (
     <main className="min-h-screen bg-white selection:bg-black selection:text-white">
       {/* Navigation */}
@@ -148,7 +153,7 @@ export default function PortfolioPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.2 }}
-              className="relative aspect-[4/5]  overflow-hidden group cursor-crosshair"
+              className="relative aspect-[4/5] overflow-hidden group cursor-crosshair"
             >
               <Image
                 src="/dayu-hero.png"
