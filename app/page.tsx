@@ -4,6 +4,7 @@ import Image from 'next/image';
 import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { initializeFirebase } from '../lib/firebase';
+import { trackButtonClick } from '../lib/analytics';
 import { 
   Github, 
   Linkedin, 
@@ -89,6 +90,10 @@ export default function PortfolioPage() {
     initializeFirebase();
   }, []);
 
+  const handleButtonClick = (label: string) => () => {
+    trackButtonClick(label);
+  };
+
   return (
     <main className="min-h-screen bg-white selection:bg-black selection:text-white">
       {/* Navigation */}
@@ -129,6 +134,7 @@ export default function PortfolioPage() {
               <div className="flex flex-wrap gap-6 items-center">
                 <a 
                   href="#contact"
+                  onClick={handleButtonClick('Work with me')}
                   className="bg-black text-white px-10 py-5 text-sm font-medium hover:bg-gray-900 transition-all hover:px-12"
                 >
                   Work with me
@@ -137,6 +143,7 @@ export default function PortfolioPage() {
                   href="https://drive.google.com/drive/folders/1jSYre7nR0OWpGdFqZ7BLPvU8cW_Z1PBI?usp=drive_link"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={handleButtonClick('See my resume')}
                   className="bg-white text-black px-10 py-5 text-sm font-medium hover:bg-gray-200 transition-all hover:px-12"
                 >
                   See my resume <ArrowUpRight size={16} className="inline-block ml-2" />
