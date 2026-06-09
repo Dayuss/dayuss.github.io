@@ -1,23 +1,40 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
+import useEmblaCarousel from 'embla-carousel-react';
 import { initializeFirebase } from '../lib/firebase';
 import { trackButtonClick } from '../lib/analytics';
-import { 
-  Github, 
-  Linkedin, 
-  Mail, 
-  ExternalLink, 
-  Code2, 
-  Database, 
-  Layers, 
+import {
+  Mail,
+  ExternalLink,
+  Code2,
+  Database,
+  Layers,
   Terminal,
   ArrowUpRight,
   MapPin,
-  Phone
+  Phone,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
+
+function Github({ size = 24, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+    </svg>
+  );
+}
+
+function Linkedin({ size = 24, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
 
 const SKILL_GROUPS = [
   {
@@ -47,17 +64,77 @@ const SKILL_GROUPS = [
   }
 ];
 
+const PROJECTS = [
+  {
+    name: "Hunian Aja",
+    role: "Frontend Developer",
+    description: "Aplikasi yang mendigitalkan ekosistem hunian apartemen dan perumahan. Mengembangkan dashboard (CMS) untuk admin/pengelola.",
+    stack: ["React (Hooks)", "Redux", "Tailwind", "ANT Design", "TypeScript"],
+    image: "/porto_hunian_aja.png",
+    link: "#",
+    w: 659, h: 533
+  },
+  {
+    name: "ADSCOIN",
+    role: "Fullstack Developer",
+    description: "Aplikasi e-commerce untuk copywriting. Merancang dan mengembangkan API serta dashboard admin.",
+    stack: ["ExpressJS", "ReactJS", "Flutter"],
+    image: "/porto_adscoin.png",
+    link: "#",
+    w: 397, h: 881
+  },
+  {
+    name: "N-POS",
+    role: "Fullstack Developer",
+    description: "Aplikasi Point-of-Sales. Merancang dan mengembangkan API, backoffice, serta update pada aplikasi Android.",
+    stack: ["ExpressJS", "ReactJS", "Java Android"],
+    image: "/porto_npos.png",
+    link: "#",
+    w: 701, h: 651
+  },
+  {
+    name: "PT Thaibah Mulia Internasional",
+    role: "Fullstack Developer",
+    description: "Aplikasi Multi Level Marketing Matahari. Merancang fitur pembagian bonus hingga 30 upline dan mengatur tim.",
+    stack: ["ExpressJS", "Laravel", "Flutter"],
+    image: "/porto_thaibah_mlm.png",
+    link: "#",
+    w: 676, h: 676
+  },
+  {
+    name: "PT Sangkuriang Sinergi Insan",
+    role: "Backend Engineer",
+    description: "Aplikasi Multi Level Marketing Binary. Merancang fitur pembagian bonus pasangan dengan pengecekan setiap jam 12 malam.",
+    stack: ["ExpressJS", "ReactJS", "Flutter"],
+    image: "/porto_sangkuriang_mlm.png",
+    link: "#",
+    w: 556, h: 739
+  },
+  {
+    name: "Pigijo",
+    role: "Frontend Developer",
+    description: "Aplikasi travel planner. Slicing dari base template HTML ke JSX dan integrasi API sesuai bisnis model.",
+    stack: ["ReactJS"],
+    image: "/porto_pigijo.png",
+    link: "#",
+    w: 846, h: 398
+  }
+];
+
 const EXPERIENCE = [
   {
     role: "Backend Developer",
     company: "PT. Elektronik Distribusi Otomasi Terkemuka (eDot)",
-    period: "02/2023 – Present",
+    period: "02/2023 – 05/2026",
     location: "Bandung, West Java",
     highlights: [
-      "Revamped the chat application by adopting a microservices-based architecture.",
-      "Optimized real-time communication features, resulting in an 80% enhancement in UX.",
-      "Integrated Redis Stack to boost RESTful API performance (response times < 50ms).",
-      "Implemented hexagonal architecture for clean code and maintainability."
+      "Revamped chat application by migrating to microservices architecture, improving scalability, modularity, and maintainability.",
+      "Designed and implemented hexagonal architecture to enforce separation of concerns, resulting in cleaner codebase and easier testing.",
+      "Optimized real-time communication and API performance using Redis, reducing response time to under 50ms.",
+      "Designed idempotent transaction mechanisms using idempotency keys to ensure safe retries and prevent duplicate transaction processing.",
+      "Built voucher calculation engine with prorated distribution per product, ensuring accurate discount allocation and financial consistency.",
+      "Managed transaction state consistency between internal services and external systems, handling retries, partial failures, and duplicate requests.",
+      "Applied asynchronous processing patterns to decouple services and improve system resilience under high load."
     ]
   },
   {
@@ -66,9 +143,9 @@ const EXPERIENCE = [
     period: "08/2022 – 02/2023",
     location: "Bandung, West Java",
     highlights: [
-      "Improved deployment process by implementing CI/CD pipelines using Jenkins.",
-      "Led daily progress updates and facilitated team discussions on bug fixes.",
-      "Optimized code structure for clean code practices and data efficiency using MongoDB."
+      "Improved deployment process by implementing CI/CD pipelines using Jenkins, ensuring faster and more reliable releases.",
+      "Led daily progress updates and facilitated team discussions on bug fixes and feature enhancements.",
+      "Optimized code structure to ensure clean code practices and improved data efficiency using MongoDB."
     ]
   },
   {
@@ -77,13 +154,218 @@ const EXPERIENCE = [
     period: "10/2019 – 07/2022",
     location: "Bandung, West Java",
     highlights: [
-      "Revamped POS API using ExpressJS and redesigned admin dashboard using ReactJS.",
-      "Developed MLM application APIs and optimized backend logic.",
-      "Integrated secure payment gateway using Xendit Service API (50% reduction in processing time).",
-      "Managed a team of 4 engineers, resulting in a 20% increase in productivity."
+      "Led revamp of POS API using ExpressJS and redesigned admin dashboard using ReactJS, resulting in enhanced user experience.",
+      "Led development of MLM application APIs and optimized backend logic for improved performance and easier maintenance.",
+      "Integrated secure payment gateway using Xendit Service API, resulting in 50% reduction in transaction processing time.",
+      "Developed and maintained LIMS India, a laboratory information management system, by fixing bugs and implementing new features.",
+      "Led and managed a team of 4 engineers, providing clear briefs and work schedules, resulting in 20% increase in team productivity."
+    ]
+  },
+  {
+    role: "Frontend Developer",
+    company: "Tyrannix",
+    period: "10/2018 – 07/2019",
+    location: "Bandung, West Java",
+    highlights: [
+      "Developed travel planner application website using ReactJS, ensuring smooth and dynamic user experience.",
+      "Implemented Redux for efficient state management across the application, improving performance and maintainability.",
+      "Collaborated with backend team to ensure seamless API integration and optimal data exchange."
     ]
   }
 ];
+
+type Project = typeof PROJECTS[number];
+
+function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <motion.div
+        initial={{ opacity: 0, y: 24, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 24, scale: 0.97 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="relative bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Image */}
+        <div className="relative h-72 overflow-hidden bg-gray-100 flex items-center justify-center">
+          <Image
+            src={project.image}
+            alt={project.name}
+            fill
+            sizes="(min-width: 672px) 672px, 100vw"
+            className="object-contain"
+          />
+          <button
+            onClick={onClose}
+            aria-label="Close modal"
+            className="absolute top-4 right-4 w-9 h-9 bg-white/90 backdrop-blur-sm flex items-center justify-center hover:bg-black hover:text-white transition-all duration-200"
+          >
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-8 md:p-10">
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-2xl font-medium tracking-tight">{project.name}</h3>
+            {project.link !== '#' && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="ml-4 mt-1 shrink-0 flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest border border-black/10 px-3 py-2 hover:bg-black hover:text-white hover:border-black transition-all duration-200"
+              >
+                Visit <ArrowUpRight size={13} />
+              </a>
+            )}
+          </div>
+          <span className="text-[10px] font-medium uppercase tracking-widest text-gray-400 block mb-6">{project.role}</span>
+
+          <p className="text-sm text-gray-500 font-light leading-relaxed mb-8">{project.description}</p>
+
+          <div>
+            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-gray-400 mb-3">Tech Stack</h4>
+            <div className="flex flex-wrap gap-2">
+              {project.stack.map((tech, i) => (
+                <span key={i} className="text-xs px-3 py-1.5 border border-black/10 text-gray-600 bg-[#FAFAFA]">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function ProjectsCarousel() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start', slidesToScroll: 1 });
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [activeProject, setActiveProject] = React.useState<Project | null>(null);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    emblaApi.on('select', onSelect);
+    return () => { emblaApi.off('select', onSelect); };
+  }, [emblaApi]);
+
+  return (
+    <>
+      <section id="projects" className="py-32 bg-white border-t border-black/5">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-end justify-between mb-16">
+            <div>
+              <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 mb-4">Portfolio</h2>
+              <h3 className="text-4xl">Featured Projects</h3>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={scrollPrev}
+                aria-label="Previous project"
+                className="w-12 h-12 border border-black/10 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={scrollNext}
+                aria-label="Next project"
+                className="w-12 h-12 border border-black/10 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-6">
+              {PROJECTS.map((project, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveProject(project)}
+                  className="group flex-none w-[90%] sm:w-[48%] lg:w-[32%] border border-black/5 bg-white hover:border-black/20 transition-colors flex flex-col text-left cursor-pointer"
+                >
+                  <div className="relative h-56 overflow-hidden bg-gray-100">
+                    <Image
+                      src={project.image}
+                      alt={project.name}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 90vw"
+                      className="object-contain [filter:grayscale(1)] group-hover:[filter:grayscale(0)] transition-all duration-700"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
+                      {/* <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-xs font-medium uppercase tracking-widest bg-black/70 px-4 py-2 backdrop-blur-sm">
+                        View Details
+                      </span> */}
+                    </div>
+                  </div>
+                  <div className="p-8 flex flex-col flex-1">
+                    <div className="flex items-start justify-between mb-3">
+                      <h4 className="text-lg font-medium leading-tight">{project.name}</h4>
+                      <ArrowUpRight size={16} className="ml-3 mt-1 shrink-0 text-gray-300 group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
+                    </div>
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-gray-400 mb-4">{project.role}</span>
+                    <p className="text-sm text-gray-500 font-light leading-relaxed mb-6 flex-1 line-clamp-3">{project.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {project.stack.map((tech, tIdx) => (
+                        <span key={tIdx} className="text-xs px-2.5 py-1 border border-black/8 text-gray-500 bg-[#FAFAFA]">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-2 mt-8 justify-center">
+            {PROJECTS.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => emblaApi?.scrollTo(idx)}
+                aria-label={`Go to project ${idx + 1}`}
+                className={`h-px transition-all duration-300 ${
+                  idx === selectedIndex ? 'w-8 bg-black' : 'w-4 bg-black/20'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {activeProject && (
+        <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
+      )}
+    </>
+  );
+}
 
 export default function PortfolioPage() {
   useEffect(() => {
@@ -105,6 +387,7 @@ export default function PortfolioPage() {
           <div className="hidden md:flex gap-10 font-sans text-xs font-medium uppercase tracking-widest text-gray-500">
             <a href="#about" className="hover:text-black transition-colors">About</a>
             <a href="#work" className="hover:text-black transition-colors">Work</a>
+            <a href="#projects" className="hover:text-black transition-colors">Projects</a>
             <a href="#skills" className="hover:text-black transition-colors">Skills</a>
             <a href="#contact" className="hover:text-black transition-colors text-black border-b border-black pb-1">Contact</a>
             {/* <a href="/github-repos" className="hover:text-black transition-colors">GitHub Repos</a> */}
@@ -129,7 +412,7 @@ export default function PortfolioPage() {
                 <span className="text-gray-300">TARDIAN.</span>
               </h1>
               <p className="text-xl md:text-2xl text-gray-500 max-w-xl mb-12 font-light leading-relaxed">
-                A Backend Engineer crafting high-performance systems and scalable architectures with over 7 years of experience.
+                A Senior Backend Engineer designing robust systems for high-load, transaction-critical environments with 6+ years of experience.
               </p>
               <div className="flex flex-wrap gap-6 items-center">
                 <a 
@@ -182,20 +465,17 @@ export default function PortfolioPage() {
           </div>
           <div className="md:col-span-8">
             <div className="max-w-2xl">
-              <p className="text-3xl md:text-4xl font-light leading-tight mb-12">
-                &quot;I believe that great software isn&apos;t just about code—it&apos;s about building <span className="text-gray-400 italic">resilient systems</span> that solve real-world problems at scale.&quot;
-              </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
                   <h3 className="text-sm font-medium uppercase tracking-widest mb-4">Philosophy</h3>
                   <p className="text-gray-500 leading-relaxed font-light">
-                    My approach is rooted in clean architecture and performance optimization. I strive for simplicity in complex systems, ensuring scalability without sacrificing maintainability.
+                    I break down complex distributed systems challenges and translate solutions into clean, maintainable code. Proven as both an individual contributor and a team lead across Golang, Node.js, and full-stack ecosystems.
                   </p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium uppercase tracking-widest mb-4">Background</h3>
                   <p className="text-gray-500 leading-relaxed font-light">
-                    With a Bachelor&apos;s in Informatics Engineering and a GPA of 3.56, I&apos;ve spent the last 7 years navigating the complexities of backend ecosystems and team leadership.
+                    Bachelor of Applied Science in Informatics Engineering from Bandung TEDC Polytechnic (GPA 3.56). 6+ years designing and delivering robust backend systems for high-load, transaction-critical environments.
                   </p>
                 </div>
               </div>
@@ -212,36 +492,83 @@ export default function PortfolioPage() {
             <h3 className="text-4xl">Selected Work</h3>
           </div>
 
-          <div className="space-y-px bg-black/5 border border-black/5">
+          <div className="divide-y divide-black/5 border-t border-b border-black/5">
             {EXPERIENCE.map((exp, idx) => (
-              <div 
+              <motion.div
                 key={idx}
-                className="group bg-white p-8 md:p-12 hover:bg-gray-50 transition-colors"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                className="group relative bg-[#FAFAFA] hover:bg-white transition-colors duration-300"
               >
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                  <div className="md:col-span-3 text-sm text-gray-400 font-mono">
-                    {exp.period}
-                  </div>
-                  <div className="md:col-span-6">
-                    <h4 className="text-2xl mb-2">{exp.role}</h4>
-                    <div className="text-gray-400 mb-6">{exp.company}</div>
-                    <ul className="space-y-3">
-                      {exp.highlights.map((h, i) => (
-                        <li key={i} className="text-sm text-gray-500 leading-relaxed flex gap-3">
-                          <span className="text-black/20">•</span> {h}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="md:col-span-3 text-right hidden md:block">
-                    <div className="text-xs text-gray-400 uppercase tracking-widest">{exp.location}</div>
+                {/* Left accent bar — slides in on hover */}
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 top-0 bottom-0 w-[3px] bg-black scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300 ease-out"
+                />
+
+                <div className="pl-8 pr-6 md:pr-12 py-10 md:py-12">
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-6 items-start">
+
+                    {/* Column 1 — index + period + location */}
+                    <div className="md:col-span-3 flex md:flex-col gap-4 md:gap-3">
+                      <span className="font-mono text-[11px] text-black/15 group-hover:text-black/30 transition-colors duration-300 leading-none pt-1 select-none">
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+                      <div>
+                        <div className="text-[11px] font-mono text-gray-400 leading-relaxed">
+                          {exp.period}
+                        </div>
+                        <div className="text-[10px] font-medium uppercase tracking-widest text-gray-300 group-hover:text-gray-400 transition-colors duration-300 mt-2 hidden md:block">
+                          {exp.location}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Column 2 — role, company, highlights */}
+                    <div className="md:col-span-9">
+                      {/* Role + Company row */}
+                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
+                        <h4 className="text-xl font-medium leading-snug tracking-tight">
+                          {exp.role}
+                        </h4>
+                        <span className="text-black/20 font-light hidden md:inline">—</span>
+                        <span className="text-sm text-gray-400 font-light leading-snug">
+                          {exp.company}
+                        </span>
+                      </div>
+
+                      {/* Mobile location */}
+                      <div className="text-[10px] font-medium uppercase tracking-widest text-gray-300 mb-5 md:hidden">
+                        {exp.location}
+                      </div>
+
+                      {/* Highlights */}
+                      <ul className="mt-5 space-y-2.5">
+                        {exp.highlights.map((h, i) => (
+                          <li key={i} className="flex gap-3 items-start">
+                            <span
+                              aria-hidden="true"
+                              className="mt-[0.45em] shrink-0 w-3 h-px bg-black/20 group-hover:bg-black/40 transition-colors duration-300"
+                            />
+                            <span className="text-sm text-gray-500 font-light leading-relaxed">
+                              {h}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Portfolio Projects Carousel */}
+      <ProjectsCarousel />
 
       {/* Skills Section */}
       <section id="skills" className="py-32 bg-white">
@@ -284,7 +611,7 @@ export default function PortfolioPage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 mb-4">Get in touch</h2>
-            <h3 className="text-4xl md:text-6xl tracking-tight">Let&apos;s collaborate.</h3>
+            <h3 className="text-4xl md:text-6xl tracking-tight">Let&apos;s <span className="bg-black text-white px-2">collaborate.</span></h3>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
